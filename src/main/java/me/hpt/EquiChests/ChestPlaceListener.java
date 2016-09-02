@@ -2,6 +2,7 @@ package me.hpt.EquiChests;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -21,17 +22,18 @@ public class ChestPlaceListener implements Listener {
 		if (e.getBlockPlaced().getType() != Material.CHEST && e.getBlockPlaced().getType() != Material.TRAPPED_CHEST) {
 			return;
 		}
-		if (e.getPlayer().isSneaking()) {
-			e.getPlayer().sendMessage("Placed a new chest at (" + e.getBlockPlaced().getLocation().getBlockX() + ", " +
-					e.getBlockPlaced().getLocation().getBlockY() + ", " + e.getBlockPlaced().getLocation().getBlockZ() + ")");
-			EquiChests.getChestManager().addBlock(e.getBlockPlaced());
+		Block placed = e.getBlockPlaced();
+		Player p = e.getPlayer();
+		if (p.isSneaking()) {
+			p.sendMessage(Language.get("chests-new", placed.getLocation().getBlockX(), placed.getLocation().getBlockY(),
+					placed.getLocation().getBlockZ(), placed.getLocation().getWorld().getName()));
+			EquiChests.get().getChestManager(placed.getWorld().getName()).addBlock(placed);
 		} else {
-			Block placed = e.getBlockPlaced();
-			double[] blocks = EquiChests.getChestManager().getDistances(placed);
+			double[] blocks = EquiChests.get().getChestManager(placed.getWorld().getName()).getDistances(placed);
 
 			// Only the 3 closest blocks
 			for (int i = 0; i < Math.min(blocks.length, 3); ++i) {
-				e.getPlayer().sendMessage((i + 1) + " : " + blocks[i]);
+				p.sendMessage((i + 1) + " : " + (int)blocks[i]);
 			}
 
 			e.setCancelled(true);
@@ -44,16 +46,19 @@ public class ChestPlaceListener implements Listener {
 			return;
 		}
 
-		if (e.getPlayer().isSneaking()) {
-			e.getPlayer().sendMessage("Removed the chest at (" + e.getBlock().getLocation().getBlockX() + " ,"
-					+ e.getBlock().getLocation().getBlockY() + ", " + e.getBlock().getLocation().getBlockZ() + ")");
-			EquiChests.getChestManager().removeBlock(e.getBlock());
+		Block b = e.getBlock();
+		Player p = e.getPlayer();
+
+		if (p.isSneaking()) {
+			p.sendMessage(Language.get("chests-removed", b.getLocation().getBlockX(), b.getLocation().getBlockY(),
+					b.getLocation().getBlockZ(), b.getLocation().getWorld().getName()));
+			EquiChests.get().getChestManager(b.getWorld().getName()).removeBlock(b);
 		} else {
-			double[] blocks = EquiChests.getChestManager().getDistances(e.getBlock());
+			double[] blocks = EquiChests.get().getChestManager(b.getWorld().getName()).getDistances(b);
 
 			// Only the 3 closest blocks
 			for (int i = 0; i < Math.min(blocks.length, 3); ++i) {
-				e.getPlayer().sendMessage((i + 1) + " : " + blocks[i]);
+				p.sendMessage((i + 1) + " : " + (int)blocks[i]);
 			}
 
 			e.setCancelled(true);

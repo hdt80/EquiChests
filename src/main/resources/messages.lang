@@ -1,0 +1,7 @@
+command-noperm=`4You don't have permission to use this command.
+command-numberformatexeption=`4String received when expecting a number.
+command-exception=`4An uncaught error has occurred. See console for details.
+chests-nearby-world=`7Nearby chests in `8{0}
+chests-nearby-dist=`8{0} `r: `2{1} `d{2}
+chests-new=`7New chest added at `8({0} {1} {2}) `7in `8{3}
+chests-removed=`7New chest removed at `8({0} {1} {2}) `7from `8{3}

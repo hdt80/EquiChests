@@ -1,19 +1,24 @@
 package me.hpt.EquiChests;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ChestLocationManager {
 
 	private class ChestData {
-		Location loc;
+		Vector loc;
 
 		public ChestData(Block b) {
-			loc = b.getLocation();
+			loc = new Vector(b.getLocation().getBlockX(), b.getLocation().getBlockY(), b.getLocation().getBlockZ());
+		}
+
+		public ChestData(Vector v) {
+			loc = v;
 		}
 
 		/**
@@ -31,21 +36,63 @@ public class ChestLocationManager {
 		 * @return The Pythagorean distance between the two blocks
 		 */
 		double distanceTo(Block b) {
-			return loc.distance(b.getLocation());
+			return loc.distance(b.getLocation().toVector());
+		}
+
+		/**
+		 * Get the number of blocks between two points
+		 * @param b Block to find the distance to
+		 * @return The Manhattan distance between the two blocks
+		 */
+		int blockDist(Block b) {
+			// TODO: Do this better
+			int xdiff = Math.abs(b.getX()) - Math.abs(loc.getBlockX());
+			int ydiff = Math.abs(b.getY()) - Math.abs(loc.getBlockY());
+			int zdiff = Math.abs(b.getZ()) - Math.abs(loc.getBlockZ());
+			return xdiff + ydiff + zdiff;
+		}
+
+		/**
+		 * Get the number of blocks between two points
+		 *
+		 * @param data Block to find the distance to
+		 * @return The Manhattan distance between the two blocks
+		 */
+		int blockDist(ChestData data) {
+			// TODO: Do this better
+			int xdiff = Math.abs(data.getLocation().getBlockX()) - Math.abs(loc.getBlockX());
+			int ydiff = Math.abs(data.getLocation().getBlockY()) - Math.abs(loc.getBlockY());
+			int zdiff = Math.abs(data.getLocation().getBlockZ()) - Math.abs(loc.getBlockZ());
+			return xdiff + ydiff + zdiff;
 		}
 
 		/**
 		 * Get the Location stored by this Data
 		 * @return Location of this ChestData
 		 */
-		Location getLocation() {
+		Vector getLocation() {
 			return loc;
 		}
 	}
 
-	public ChestLocationManager() {}
+	public ChestLocationManager(String world) {
+		this.world = world;
+	}
 
 	private ArrayList<ChestData> data = new ArrayList<>();
+	private String world;
+
+	/**
+	 * Get a List of Data that this ChestLocationManager contains
+	 * @return List of Vectors with each Vector a chest block
+	 */
+	public List<Vector> getData() {
+		List<Vector> toReturn = new ArrayList<>();
+		for (ChestData cdata : data) {
+			toReturn.add(cdata.getLocation());
+		}
+		return toReturn;
+	}
 
 	/**
 	 * Add a new Block to manage to this Manager
@@ -55,10 +102,23 @@ public class ChestLocationManager {
 		if (!validBlock(b)) {
 			return;
 		}
-		if (getBlock(b.getLocation()) != null) {
+		if (getBlock(b.getLocation().toVector()) != null) {
+			return;
+		}
+		if (!b.getWorld().getName().equals(world)) {
 			return;
 		}
 		data.add(new ChestData(b));
+	}
+
+	/**
+	 * Used to load data from the config
+	 * @param configData List of Vectors to load into this manager
+	 */
+	public void loadConfigData(List<Vector> configData) {
+		for (Vector v : configData) {
+			data.add(new ChestData(v));
+		}
 	}
 
 	/**
@@ -66,10 +126,18 @@ public class ChestLocationManager {
 	 * @param b Block to remove
 	 */
 	public void removeBlock(Block b) {
-		if (!validBlock(b) && (getBlock(b.getLocation()) != null)) {
+		if (!validBlock(b) && (getBlock(b.getLocation().toVector()) != null)) {
 			return;
 		}
-		data.remove(new ChestData(b));
+		for (int i = 0; i < data.size(); ++i) {
+			if (data.get(i).getLocation().getBlockX() == b.getLocation().getBlockX()
+					&& data.get(i).getLocation().getBlockY() == b.getLocation().getBlockY()
+					&& data.get(i).getLocation().getBlockZ() == b.getLocation().getBlockZ()) {
+				data.remove(i);
+				return;
+			}
+		}
+		Logger.warn("Failed to find %s in data", b.toString());
 	}
 
 	/**
@@ -77,7 +145,7 @@ public class ChestLocationManager {
 	 * @param loc Location to find if a Chest exists
 	 * @return Location of the block, or null if no chest exists there
 	 */
-	public Location getBlock(Location loc) {
+	public Vector getBlock(Vector loc) {
 		for (ChestData cdata : data) {
 			if (cdata.getLocation() == loc) {
 				return loc;
@@ -112,7 +180,8 @@ public class ChestLocationManager {
 	 * @return If the block is a valid block that can be added
 	 */
 	private boolean validBlock(Block b) {
-		return b.getType() == Material.CHEST || b.getType() == Material.TRAPPED_CHEST;
+		return (b.getType() == Material.CHEST || b.getType() == Material.TRAPPED_CHEST)
+				&& (b.getWorld().getName().equals(world));
 	}
 
 }
