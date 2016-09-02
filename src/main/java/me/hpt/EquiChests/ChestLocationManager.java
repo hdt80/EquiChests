@@ -102,10 +102,7 @@ public class ChestLocationManager {
 		if (!validBlock(b)) {
 			return;
 		}
-		if (getBlock(b.getLocation().toVector()) != null) {
-			return;
-		}
-		if (!b.getWorld().getName().equals(world)) {
+		if (chestAt(b.getLocation().getBlockX(), b.getLocation().getBlockY(), b.getLocation().getBlockZ())) {
 			return;
 		}
 		data.add(new ChestData(b));
@@ -119,6 +116,25 @@ public class ChestLocationManager {
 		for (Vector v : configData) {
 			data.add(new ChestData(v));
 		}
+	}
+
+	/**
+	 * Check if there is a chest stored in data
+	 * @param x X coord
+	 * @param y Y coord
+	 * @param z Z coord
+	 * @return If there is a chest at the coords
+	 */
+	public boolean chestAt(int x, int y, int z) {
+		for (Vector v : getData()) {
+			if (v.getBlockX() == x
+					&& v.getBlockY() == y
+					&& v.getBlockZ() == z) {
+
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -137,7 +153,6 @@ public class ChestLocationManager {
 				return;
 			}
 		}
-		Logger.warn("Failed to find %s in data", b.toString());
 	}
 
 	/**
