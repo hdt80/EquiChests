@@ -1,5 +1,6 @@
 package me.hpt.EquiChests;
 
+import me.hpt.EquiChests.Utils.Sorting;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
@@ -9,72 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ChestLocationManager {
-
-	private class ChestData {
-		Vector loc;
-
-		public ChestData(Block b) {
-			loc = new Vector(b.getLocation().getBlockX(), b.getLocation().getBlockY(), b.getLocation().getBlockZ());
-		}
-
-		public ChestData(Vector v) {
-			loc = v;
-		}
-
-		/**
-		 * Pythagorean distance between two chests
-		 * @param data ChestData to find the distance to
-		 * @return The Pythagorean distance between the two blocks
-		 */
-		double distanceTo(ChestData data) {
-			return loc.distance(data.getLocation());
-		}
-
-		/**
-		 * Pythoagorean distance between two points
-		 * @param b Block to find the distance to
-		 * @return The Pythagorean distance between the two blocks
-		 */
-		double distanceTo(Block b) {
-			return loc.distance(b.getLocation().toVector());
-		}
-
-		/**
-		 * Get the number of blocks between two points
-		 * @param b Block to find the distance to
-		 * @return The Manhattan distance between the two blocks
-		 */
-		int blockDist(Block b) {
-			// TODO: Do this better
-			int xdiff = Math.abs(b.getX()) - Math.abs(loc.getBlockX());
-			int ydiff = Math.abs(b.getY()) - Math.abs(loc.getBlockY());
-			int zdiff = Math.abs(b.getZ()) - Math.abs(loc.getBlockZ());
-			return xdiff + ydiff + zdiff;
-		}
-
-		/**
-		 * Get the number of blocks between two points
-		 *
-		 * @param data Block to find the distance to
-		 * @return The Manhattan distance between the two blocks
-		 */
-		int blockDist(ChestData data) {
-			// TODO: Do this better
-			int xdiff = Math.abs(data.getLocation().getBlockX()) - Math.abs(loc.getBlockX());
-			int ydiff = Math.abs(data.getLocation().getBlockY()) - Math.abs(loc.getBlockY());
-			int zdiff = Math.abs(data.getLocation().getBlockZ()) - Math.abs(loc.getBlockZ());
-			return xdiff + ydiff + zdiff;
-		}
-
-		/**
-		 * Get the Location stored by this Data
-		 * @return Location of this ChestData
-		 */
-		Vector getLocation() {
-			return loc;
-		}
-	}
-
 	public ChestLocationManager(String world) {
 		this.world = world;
 	}
@@ -167,6 +102,21 @@ public class ChestLocationManager {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Sort all the data based on the pythagorean distance to loc
+	 * @param loc Location to measure the distance from
+	 * @return ChestData sorted from smallest to largest
+	 */
+	public ChestData[] sort(Vector loc) {
+		ChestData[] toSort = new ChestData[data.size()];
+		for (int i = 0; i < data.size(); ++i) {
+			toSort[i] = data.get(i);
+		}
+		Sorting.startSort(loc, toSort);
+
+		return toSort;
 	}
 
 	/**

@@ -3,10 +3,7 @@ package me.hpt.EquiChests.Commands;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
-import me.hpt.EquiChests.ChestLocationManager;
-import me.hpt.EquiChests.Config;
-import me.hpt.EquiChests.EquiChests;
-import me.hpt.EquiChests.Language;
+import me.hpt.EquiChests.*;
 import me.hpt.EquiChests.Utils.ChestDataJSONClickable;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.Packet;
@@ -45,7 +42,7 @@ public class EquiChestsCommands {
 
 	@Command(aliases = {"check", "ck"},
 			desc = "Check to see if each chest is a world still exists",
-			usage = "",
+			usage = "<World name>",
 			min = 0,
 			max = 1,
 			flags = "rR"
@@ -77,6 +74,7 @@ public class EquiChestsCommands {
 
 		for (Vector v : manager.getData()) {
 			// TODO: Ew
+			// Check if the block at the location stored in ChestData is a chest or a trapped chest
 			if (world.getBlockAt(v.getBlockX(), v.getBlockY(), v.getBlockZ()).getType() != Material.CHEST
 					&& world.getBlockAt(v.getBlockX(), v.getBlockY(), v.getBlockZ()).getType() != Material.TRAPPED_CHEST) {
 				sender.sendMessage(Language.get("chests-notfound", v.getBlockX(), v.getBlockY(), v.getBlockZ(), worldName));
@@ -91,39 +89,29 @@ public class EquiChestsCommands {
 
 	@Command(aliases = {"list", "ls"},
 			desc = "List each chest stored in a chest manager",
-			usage = "",
+			usage = "<World name>",
 			min = 0,
 			max = 1
 	)
 	public static void listChests(final CommandContext args, CommandSender sender) throws CommandException {
-		String worldName = "";
-		Player p = null;
-
 		if (!(sender instanceof Player)) {
-			if (args.argsLength() != 1) {
-				sender.sendMessage(Language.get("command-consoleprovidearg"));
-				return;
-			} else {
-				worldName = args.getString(1);
-			}
-		} else {
-			p = (Player) sender;
-			worldName = (args.argsLength() == 1 ? args.getString(1) : p.getWorld().getName());
+			sender.sendMessage(Language.get("command-playersonly"));
+			return;
 		}
+
+		Player p = (Player) sender;
+		String worldName = (args.argsLength() == 1 ? args.getString(1) : p.getWorld().getName());
 
 		sender.sendMessage(Language.get("chests-listintro", worldName));
 
 		ChestLocationManager manager = EquiChests.get().getChestManager(worldName);
-
-		for (Vector v : manager.getData()) {
-			if (p != null) {
-				// Similar to /tellraw
-				String msg = ChestDataJSONClickable.getLocationClickableMessage(v.getBlockX(), v.getBlockY(), v.getBlockZ());
-				Packet packet = new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a(msg), (byte)1);
-				((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
-			} else {
-				sender.sendMessage(Language.get("chests-listiter", v.getBlockX(), v.getBlockY(), v.getBlockZ()));
-			}
+		ChestData[] sorted = manager.sort(p.getLocation().toVector());
+		// List each ChestData in order of closest
+		for (ChestData v : sorted) {
+			// Similar to /tellraw
+			String msg = ChestDataJSONClickable.getChestDataClickableMessage(v);
+			Packet packet = new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a(msg), (byte)1);
+			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
 		}
 	}
 }

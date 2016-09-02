@@ -1,5 +1,6 @@
 package me.hpt.EquiChests;
 
+import me.hpt.EquiChests.Utils.MessageUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -29,11 +30,13 @@ public class ChestPlaceListener implements Listener {
 					placed.getLocation().getBlockZ(), placed.getLocation().getWorld().getName()));
 			EquiChests.get().getChestManager(placed.getWorld().getName()).addBlock(placed);
 		} else {
-			double[] blocks = EquiChests.get().getChestManager(placed.getWorld().getName()).getDistances(placed);
+			//double[] blocks = EquiChests.get().getChestManager(placed.getWorld().getName()).getDistances(placed);
+
+			ChestData[] data = EquiChests.get().getChestManager(placed.getWorld().getName()).sort(p.getLocation().toVector());
 
 			// Only the 3 closest blocks
-			for (int i = 0; i < Math.min(blocks.length, 3); ++i) {
-				p.sendMessage((i + 1) + " : " + (int)blocks[i]);
+			for (int i = 0; i < Math.min(data.length, 3); ++i) {
+				MessageUtils.sendChestDataMessage(p, p.getLocation().toVector(), data[i]);
 			}
 
 			e.setCancelled(true);
@@ -54,11 +57,13 @@ public class ChestPlaceListener implements Listener {
 					b.getLocation().getBlockZ(), b.getLocation().getWorld().getName()));
 			EquiChests.get().getChestManager(b.getWorld().getName()).removeBlock(b);
 		} else {
-			double[] blocks = EquiChests.get().getChestManager(b.getWorld().getName()).getDistances(b);
+			//double[] blocks = EquiChests.get().getChestManager(b.getWorld().getName()).getDistances(b);
+
+			ChestData[] data = EquiChests.get().getChestManager(b.getWorld().getName()).sort(p.getLocation().toVector());
 
 			// Only the 3 closest blocks
-			for (int i = 0; i < Math.min(blocks.length, 3); ++i) {
-				p.sendMessage((i + 1) + " : " + (int)blocks[i]);
+			for (int i = 0; i < Math.min(data.length, 3); ++i) {
+				MessageUtils.sendChestDataMessage(p, p.getLocation().toVector(), data[i]);
 			}
 
 			e.setCancelled(true);

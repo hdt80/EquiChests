@@ -4,6 +4,7 @@ command-exception=`4An uncaught error has occurred. See console for details
 command-configreload-done=`2Done!
 command-consoleprovideargs=`cYou must provide the arguments if you're console
 command-howtocheck=`fUse to `3-r `fflag to show where the missing chests are
+command-playersonly=`4Only players can use this command
 chests-nearby-world=`fNearby chests in `d{0}
 chests-nearby-dist=`f{0} `r: `9{1} `5{2}
 chests-new=`fNew chest `aadded`f at `8({0} {1} {2}) `fin `d{3}
