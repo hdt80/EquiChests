@@ -32,11 +32,11 @@ public class ChestPlaceListener implements Listener {
 		} else {
 			//double[] blocks = EquiChests.get().getChestManager(placed.getWorld().getName()).getDistances(placed);
 
-			ChestData[] data = EquiChests.get().getChestManager(placed.getWorld().getName()).sort(p.getLocation().toVector());
+			ChestData[] data = EquiChests.get().getChestManager(placed.getWorld().getName()).sort(placed.getLocation().toVector());
 
 			// Only the 3 closest blocks
 			for (int i = 0; i < Math.min(data.length, 3); ++i) {
-				MessageUtils.sendChestDataMessage(p, p.getLocation().toVector(), data[i]);
+				MessageUtils.sendChestDataMessage(p, placed.getLocation().toVector(), data[i]);
 			}
 
 			e.setCancelled(true);
@@ -57,13 +57,11 @@ public class ChestPlaceListener implements Listener {
 					b.getLocation().getBlockZ(), b.getLocation().getWorld().getName()));
 			EquiChests.get().getChestManager(b.getWorld().getName()).removeBlock(b);
 		} else {
-			//double[] blocks = EquiChests.get().getChestManager(b.getWorld().getName()).getDistances(b);
-
-			ChestData[] data = EquiChests.get().getChestManager(b.getWorld().getName()).sort(p.getLocation().toVector());
+			ChestData[] data = EquiChests.get().getChestManager(b.getWorld().getName()).sort(b.getLocation().toVector());
 
 			// Only the 3 closest blocks
 			for (int i = 0; i < Math.min(data.length, 3); ++i) {
-				MessageUtils.sendChestDataMessage(p, p.getLocation().toVector(), data[i]);
+				MessageUtils.sendChestDataMessage(p, b.getLocation().toVector(), data[i]);
 			}
 
 			e.setCancelled(true);

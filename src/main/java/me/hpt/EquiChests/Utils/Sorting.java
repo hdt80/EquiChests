@@ -10,6 +10,11 @@ public class Sorting {
 	private static int length;
 	private static Vector vector;
 
+	/**
+	 * Start a new Merge Sort
+	 * @param vec Distance to measure from
+	 * @param array Data to sort
+	 */
 	public static void startSort(Vector vec, ChestData[] array) {
 		input = array;
 		length = array.length;

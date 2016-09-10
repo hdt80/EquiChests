@@ -4,15 +4,11 @@ import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
 import me.hpt.EquiChests.*;
-import me.hpt.EquiChests.Utils.ChestDataJSONClickable;
-import net.minecraft.server.v1_8_R3.IChatBaseComponent;
-import net.minecraft.server.v1_8_R3.Packet;
-import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
+import me.hpt.EquiChests.Utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -108,10 +104,7 @@ public class EquiChestsCommands {
 		ChestData[] sorted = manager.sort(p.getLocation().toVector());
 		// List each ChestData in order of closest
 		for (ChestData v : sorted) {
-			// Similar to /tellraw
-			String msg = ChestDataJSONClickable.getChestDataClickableMessage(v);
-			Packet packet = new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a(msg), (byte)1);
-			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
+			MessageUtils.sendChestDataMessage(p, p.getLocation().toVector(), v);
 		}
 	}
 }
