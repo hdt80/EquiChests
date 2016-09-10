@@ -1,5 +1,7 @@
-package me.hpt.EquiChests;
+package me.hpt.EquiChests.Listeners;
 
+import me.hpt.EquiChests.EquiChests;
+import me.hpt.EquiChests.Logger;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldInitEvent;

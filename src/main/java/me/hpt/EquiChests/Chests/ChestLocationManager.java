@@ -1,4 +1,4 @@
-package me.hpt.EquiChests;
+package me.hpt.EquiChests.Chests;
 
 import me.hpt.EquiChests.Utils.Sorting;
 import org.bukkit.Material;

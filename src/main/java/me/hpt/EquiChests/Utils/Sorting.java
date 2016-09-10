@@ -1,6 +1,6 @@
 package me.hpt.EquiChests.Utils;
 
-import me.hpt.EquiChests.ChestData;
+import me.hpt.EquiChests.Chests.ChestData;
 import org.bukkit.util.Vector;
 
 public class Sorting {

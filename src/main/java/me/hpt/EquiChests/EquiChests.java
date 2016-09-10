@@ -3,7 +3,11 @@ package me.hpt.EquiChests;
 import com.google.common.base.Preconditions;
 import com.sk89q.bukkit.util.CommandsManagerRegistration;
 import com.sk89q.minecraft.util.commands.*;
+import me.hpt.EquiChests.Chests.ChestLocationManager;
 import me.hpt.EquiChests.Commands.EquiChestsParentCommand;
+import me.hpt.EquiChests.Listeners.ChestPlaceListener;
+import me.hpt.EquiChests.Listeners.NetherStarUseListener;
+import me.hpt.EquiChests.Listeners.WorldListener;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -32,6 +36,7 @@ public class EquiChests extends JavaPlugin {
 
 		new WorldListener(this);
 		new ChestPlaceListener(this);
+		new NetherStarUseListener(this);
 
 		setupCommands();
 	}

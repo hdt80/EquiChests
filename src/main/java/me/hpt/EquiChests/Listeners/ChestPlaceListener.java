@@ -1,5 +1,8 @@
-package me.hpt.EquiChests;
+package me.hpt.EquiChests.Listeners;
 
+import me.hpt.EquiChests.Chests.ChestData;
+import me.hpt.EquiChests.EquiChests;
+import me.hpt.EquiChests.Language;
 import me.hpt.EquiChests.Utils.MessageUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -30,8 +33,6 @@ public class ChestPlaceListener implements Listener {
 					placed.getLocation().getBlockZ(), placed.getLocation().getWorld().getName()));
 			EquiChests.get().getChestManager(placed.getWorld().getName()).addBlock(placed);
 		} else {
-			//double[] blocks = EquiChests.get().getChestManager(placed.getWorld().getName()).getDistances(placed);
-
 			ChestData[] data = EquiChests.get().getChestManager(placed.getWorld().getName()).sort(placed.getLocation().toVector());
 
 			// Only the 3 closest blocks

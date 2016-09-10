@@ -4,6 +4,8 @@ import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
 import me.hpt.EquiChests.*;
+import me.hpt.EquiChests.Chests.ChestData;
+import me.hpt.EquiChests.Chests.ChestLocationManager;
 import me.hpt.EquiChests.Utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

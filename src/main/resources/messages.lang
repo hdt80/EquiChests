@@ -13,3 +13,4 @@ chests-notfound=`fMissing a chest at `8({0} {1} {2})  `7in `d{3}
 chests-puttingmissing=`fPlacing a `bDiamond Block `fat the missing chest locations
 chests-listintro=`fHere are all the chests in `d{0}
 chests-listiter=`8{0} {1} {2}
+spawnpoint-coords=- ({0}..{1}..{2})

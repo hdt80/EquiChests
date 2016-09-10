@@ -1,6 +1,6 @@
 package me.hpt.EquiChests.Utils;
 
-import me.hpt.EquiChests.ChestData;
+import me.hpt.EquiChests.Chests.ChestData;
 import mkremins.fanciful.FancyMessage;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.Packet;

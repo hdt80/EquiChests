@@ -1,4 +1,4 @@
-package me.hpt.EquiChests;
+package me.hpt.EquiChests.Chests;
 
 import org.bukkit.block.Block;
 import org.bukkit.util.Vector;
